@@ -9,6 +9,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/pbscpf?schema=public",
+    url: process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/cpfmgt?schema=public",
   },
 });

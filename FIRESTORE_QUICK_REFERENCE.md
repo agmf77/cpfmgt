@@ -244,7 +244,7 @@ const q = query(collection(firestore, "members"), ...constraints);
 - Dexie handles all local persistence
 
 **Local Database Path**:
-- Database Name: `PBSCPF_LocalDB`
+- Database Name: `CPF_LocalDB`
 - Storage: Browser IndexedDB
 - Persistence: Until user clears browser data
 

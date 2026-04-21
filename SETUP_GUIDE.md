@@ -25,12 +25,12 @@
 
 1. Open `.env` in your project:
    ```bash
-   cd /workspaces/cpfmgt/pbscpf
+   cd /workspaces/cpfmgt
    ```
 
 2. Replace the `DATABASE_URL` line with your Render connection string:
    ```env
-   DATABASE_URL="postgresql://postgres:xxxxx@render.internal:5432/pbscpf"
+   DATABASE_URL="postgresql://postgres:xxxxx@render.internal:5432/cpfmgt"
    ```
 
 3. Save file
@@ -88,7 +88,7 @@ This seeds default data (chart of accounts, settings).
 npm install -g vercel
 
 # Deploy
-cd /workspaces/cpfmgt/pbscpf
+cd /workspaces/cpfmgt
 vercel
 
 # Follow prompts:
@@ -122,7 +122,7 @@ vercel
 ## Step 6: Configure Render Database for Vercel
 
 1. Go back to Render.com dashboard
-2. Click your database "pbscpf-db"
+2. Click your database "cpfmgt-db"
 3. Go to "Connections" tab
 4. **For Vercel deployment, use:** External connection string (with `.onrender.com` domain)
 5. Update your Vercel environment variable with this new string

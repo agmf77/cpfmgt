@@ -51,7 +51,7 @@ class LocalDatabase extends Dexie {
   settings!: Table<Record<string, any>, string>;
 
   constructor() {
-    super('PBSCPF_LocalDB');
+    super('CPF_LocalDB');
     this.version(1).stores({
       members: 'id,memberIdNumber,memberName',
       journalEntries: 'id,entryDate',
