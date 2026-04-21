@@ -1,0 +1,182 @@
+
+{
+  "entities": {
+    "ChartOfAccount": {
+      "title": "ChartOfAccount",
+      "type": "object",
+      "description": "Represents a single account in the Chart of Accounts (COA).",
+      "properties": {
+        "id": { "type": "string" },
+        "accountCode": { "type": "string" },
+        "accountName": { "type": "string" },
+        "accountType": { "type": "string" },
+        "normalBalance": { "type": "string" },
+        "isHeader": { "type": "boolean" }
+      },
+      "required": ["accountCode", "accountName"]
+    },
+    "Member": {
+      "title": "Member",
+      "type": "object",
+      "description": "Represents a member of the CPF fund.",
+      "properties": {
+        "id": { "type": "string" },
+        "memberIdNumber": { "type": "string" },
+        "name": { "type": "string" },
+        "designation": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Retired", "Transferred", "InActive"] },
+        "dateJoined": { "type": "string", "format": "date" },
+        "zonalOffice": { "type": "string" },
+        "permanentAddress": { "type": "string" }
+      },
+      "required": ["memberIdNumber", "name"]
+    },
+    "FundSummary": {
+      "title": "FundSummary",
+      "type": "object",
+      "description": "Subsidiary ledger entries for members.",
+      "properties": {
+        "summaryDate": { "type": "string", "format": "date" },
+        "particulars": { "type": "string" },
+        "employeeContribution": { "type": "number" },
+        "loanWithdrawal": { "type": "number" },
+        "loanRepayment": { "type": "number" },
+        "profitEmployee": { "type": "number" },
+        "profitLoan": { "type": "number" },
+        "pbsContribution": { "type": "number" },
+        "profitPbs": { "type": "number" },
+        "memberId": { "type": "string" },
+        "journalEntryId": { "type": "string" },
+        "contributionSource": { "type": "string" },
+        "isSystemGenerated": { "type": "boolean" },
+        "isManual": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "type": "object",
+      "description": "Double-entry accounting journal vouchers.",
+      "properties": {
+        "entryDate": { "type": "string", "format": "date" },
+        "description": { "type": "string" },
+        "referenceNumber": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "accountCode": { "type": "string" },
+              "accountName": { "type": "string" },
+              "debit": { "type": "number" },
+              "credit": { "type": "number" },
+              "memberId": { "type": "string" },
+              "memo": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "InvestmentInstrument": {
+      "title": "InvestmentInstrument",
+      "type": "object",
+      "description": "Fixed income or deposit instruments (FDR, Bonds).",
+      "properties": {
+        "id": { "type": "string" },
+        "bankName": { "type": "string" },
+        "referenceNumber": { "type": "string" },
+        "principalAmount": { "type": "number", "description": "Current cycle principal" },
+        "initialPrincipalAmount": { "type": "number", "description": "First opening principal" },
+        "interestRate": { "type": "number" },
+        "firstOpeningDate": { "type": "string", "format": "date" },
+        "issueDate": { "type": "string", "format": "date", "description": "Current cycle start or renew date" },
+        "maturityDate": { "type": "string", "format": "date" },
+        "instrumentType": { "type": "string" },
+        "chartOfAccountId": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Matured", "Closed"] }
+      }
+    },
+    "InterestProvision": {
+      "title": "InterestProvision",
+      "type": "object",
+      "description": "Year-end interest accrual records for investments.",
+      "properties": {
+        "investmentId": { "type": "string" },
+        "bankName": { "type": "string" },
+        "referenceNumber": { "type": "string" },
+        "fiscalYear": { "type": "string" },
+        "periodStart": { "type": "string", "format": "date" },
+        "periodEnd": { "type": "string", "format": "date" },
+        "days": { "type": "number" },
+        "principalAmount": { "type": "number" },
+        "interestRate": { "type": "number" },
+        "grossInterest": { "type": "number" },
+        "tdsAmount": { "type": "number" },
+        "accruedInterest": { "type": "number", "description": "Net interest after TDS" },
+        "postedAt": { "type": "string" }
+      }
+    },
+    "SystemSettings": {
+      "title": "SystemSettings",
+      "type": "object",
+      "description": "Global system configuration for ledger mappings.",
+      "properties": {
+        "mapping": { "type": "object" },
+        "debitAccounts": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/settings/{settingId}",
+        "definition": {
+          "entityName": "SystemSettings",
+          "schema": { "$ref": "#/backend/entities/SystemSettings" },
+          "description": "Stores system-wide configurations.",
+          "params": [{ "name": "settingId", "description": "Setting ID." }]
+        }
+      },
+      {
+        "path": "/chartOfAccounts/{accountId}",
+        "definition": {
+          "entityName": "ChartOfAccount",
+          "schema": { "$ref": "#/backend/entities/ChartOfAccount" },
+          "description": "Master list of accounts.",
+          "params": [{ "name": "accountId", "description": "Document ID." }]
+        }
+      },
+      {
+        "path": "/members/{memberId}",
+        "definition": {
+          "entityName": "Member",
+          "schema": { "$ref": "#/backend/entities/Member" },
+          "description": "Member profiles.",
+          "params": [{ "name": "memberId", "description": "Document ID." }]
+        }
+      },
+      {
+        "path": "/investmentInstruments/{id}",
+        "definition": {
+          "entityName": "InvestmentInstrument",
+          "schema": { "$ref": "#/backend/entities/InvestmentInstrument" },
+          "description": "Institutional investment portfolio items.",
+          "params": [{ "name": "id", "description": "Document ID." }]
+        }
+      },
+      {
+        "path": "/accruedInterestLogs/{id}",
+        "definition": {
+          "entityName": "InterestProvision",
+          "schema": { "$ref": "#/backend/entities/InterestProvision" },
+          "description": "Logs of accrued interest provisions.",
+          "params": [{ "name": "id", "description": "Log ID." }]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Settings tables for different configuration types
+model GeneralSettings {
+  id        String   @id @default(cuid())
+  pbsName   String   @default("Gazipur Palli Bidyut Samity-2")
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("general_settings")
+}
+
+model LedgerSettings {
+  id           String   @id @default(cuid())
+  mapping      String   @default("{}")
+  debitAccounts String   @default("[]")
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  @@map("ledger_settings")
+}
+
+model InterestSettings {
+  id    String   @id @default(cuid())
+  tiers String   @default("[]") // Array of { limit: number | null, rate: number }
+  tdsRate Float  @default(0.2)
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("interest_settings")
+}
+
+// Members table
+model Member {
+  id                String   @id @default(cuid())
+  memberIdNumber    String   @unique
+  name              String
+  designation       String?
+  dateJoined        DateTime?
+  zonalOffice       String?
+  permanentAddress  String?
+  status            String   @default("Active")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
+
+  // Relations
+  fundSummaries     FundSummary[]
+
+  @@map("members")
+}
+
+// Fund summaries (previously subcollection under members)
+model FundSummary {
+  id                   String   @id @default(cuid())
+  memberId             String
+  summaryDate          DateTime
+  employeeContribution Float    @default(0)
+  loanWithdrawal       Float    @default(0)
+  loanRepayment        Float    @default(0)
+  profitEmployee       Float    @default(0)
+  profitLoan           Float    @default(0)
+  pbsContribution      Float    @default(0)
+  profitPbs            Float    @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+
+  // Relations
+  member               Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("fund_summaries")
+}
+
+// Journal entries
+model JournalEntry {
+  id              String   @id @default(cuid())
+  entryDate       DateTime
+  description     String
+  referenceNumber String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  // Relations
+  lines           JournalEntryLine[]
+
+  @@map("journal_entries")
+}
+
+// Journal entry lines
+model JournalEntryLine {
+  id            String  @id @default(cuid())
+  journalEntryId String
+  accountCode   String
+  debit         Float   @default(0)
+  credit        Float   @default(0)
+  memo          String?
+  memberId      String?
+
+  // Relations
+  journalEntry  JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+
+  @@map("journal_entry_lines")
+}
+
+// Chart of accounts
+model ChartOfAccount {
+  id        String @id @default(cuid())
+  code      String @unique
+  name      String
+  type      String
+  balance   String
+  isHeader  Boolean @default(false)
+
+  @@map("chart_of_accounts")
+}
+
+// Investment instruments
+model InvestmentInstrument {
+  id                      String   @id @default(cuid())
+  instrumentType          String
+  bankName                String?
+  principalAmount         Float
+  initialPrincipalAmount  Float?
+  issueDate               DateTime?
+  firstOpeningDate        DateTime?
+  maturityDate            DateTime?
+  interestRate            Float?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @default(now()) @updatedAt
+
+  // Relations
+  auditHistory            InvestmentAuditHistory[]
+
+  @@map("investment_instruments")
+}
+
+// Investment audit history (previously subcollection)
+model InvestmentAuditHistory {
+  id                     String   @id @default(cuid())
+  investmentInstrumentId String
+  action                 String
+  oldValue               String?
+  newValue               String?
+  timestamp              DateTime @default(now())
+
+  // Relations
+  investmentInstrument   InvestmentInstrument @relation(fields: [investmentInstrumentId], references: [id], onDelete: Cascade)
+
+  @@map("investment_audit_history")
+}

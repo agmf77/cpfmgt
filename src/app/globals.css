@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 240 70% 60%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 0%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 0 0% 0%;
+    --radius: 0.5rem;
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 0 0% 0%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 0 0% 0%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body text-base leading-7 antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-black tracking-tight;
+  }
+
+  .font-ledger {
+    font-size: 16px;
+    color: #000 !important;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 8mm;
+  }
+
+  [data-sidebar="sidebar"],
+  [data-sidebar="trigger"],
+  .no-print,
+  nav,
+  header,
+  footer,
+  aside,
+  button,
+  .TabsList,
+  .no-print * {
+    display: none !important;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background-color: white !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: economy !important;
+    print-color-adjust: economy !important;
+    text-rendering: optimizeLegibility;
+  }
+
+  *, *::before, *::after {
+    background-color: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-color: #000000 !important;
+  }
+
+  .print-container {
+    width: 100% !important;
+    max-width: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: static !important;
+    display: block !important;
+  }
+
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    page-break-inside: auto;
+    table-layout: fixed !important;
+    border: 0.5pt solid black !important;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  th, td {
+    border: 0.5pt solid black !important;
+    color: #000000 !important;
+    background-color: transparent !important;
+    padding: 3pt 2pt !important;
+    word-wrap: break-word !important;
+    overflow: visible !important;
+  }
+
+  .font-ledger {
+    font-family: 'Times New Roman', 'Segoe UI', 'Arial', 'Times New Roman' !important;
+    font-size: 16px !important;
+    color: #000 !important;
+  }
+
+  .border-dotted, .border-dashed {
+    border-style: solid !important;
+    border-width: 0.5pt !important;
+  }
+
+  .print-portrait-fix {
+    width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 5mm !important;
+  }
+}
